@@ -1,19 +1,22 @@
 package com.company;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
 public class DataBase {
      private Connection conn;
 
-     public DataBase() {
+     public DataBase() throws IOException {
 
-        String URL = "jdbc:postgresql://localhost:5432/test_database";
-        String USER = "myuser";
-        String PASSWORD = "Ludik675205";
+         PropertyFileReader pr = new PropertyFileReader();
+
+        String url = pr.getPropValue("url");
+        String user = pr.getPropValue("user");
+        String password = pr.getPropValue("password");
 
         try {
-            conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            conn = DriverManager.getConnection(url, user, password);
         } catch (SQLException exception) {
             System.out.println("Failed to create the database connection.");
             System.exit(1);

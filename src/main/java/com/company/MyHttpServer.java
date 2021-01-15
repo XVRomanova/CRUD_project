@@ -24,9 +24,9 @@ public class MyHttpServer {
         server = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress("localhost", 8080), 0);
 
         HttpContext contextGet = server.createContext("/get");
-        HttpContext contextAdd = server.createContext("/add");
+        HttpContext contextAdd = server.createContext("/post");
         HttpContext contextDelete = server.createContext("/delete");
-        HttpContext contextUpdate = server.createContext("/update");
+        HttpContext contextUpdate = server.createContext("/put");
 
         contextGet.setHandler(this::getAllDataFromAccounts);
         contextAdd.setHandler(this::addNewAccount);
@@ -58,19 +58,11 @@ public class MyHttpServer {
     }
 
     private void updateAccountBalance(HttpExchange httpExchange) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8));
 
-        StringBuilder sb = new StringBuilder();
-        String line;
-
-        while ((line = bufferedReader.readLine()) != null) {
-            sb.append(line);
-        }
-
-        bufferedReader.close();
+        StringBuilder bodyJSON = generateBodyJSON(httpExchange);
 
         try {
-            JSONObject response = new JSONObject(sb.toString());
+            JSONObject response = new JSONObject(bodyJSON.toString());
 
             Account account = new Account();
             account.setName(response.getString("name"));
@@ -86,19 +78,11 @@ public class MyHttpServer {
     }
 
     private void deleteAccount(HttpExchange httpExchange) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8));
 
-        StringBuilder sb = new StringBuilder();
-        String line;
-
-        while ((line = bufferedReader.readLine()) != null) {
-            sb.append(line);
-        }
-
-        bufferedReader.close();
+        StringBuilder bodyJSON = generateBodyJSON(httpExchange);
 
         try {
-            JSONObject response = new JSONObject(sb.toString());
+            JSONObject response = new JSONObject(bodyJSON.toString());
 
             Account account = new Account();
             account.setName(response.getString("name"));
@@ -113,19 +97,11 @@ public class MyHttpServer {
     }
 
     private void addNewAccount(HttpExchange httpExchange) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8));
 
-        StringBuilder sb = new StringBuilder();
-        String line;
-
-        while ((line = bufferedReader.readLine()) != null) {
-            sb.append(line);
-        }
-
-        bufferedReader.close();
+        StringBuilder bodyJSON = generateBodyJSON(httpExchange);
 
         try {
-            JSONObject response = new JSONObject(sb.toString());
+            JSONObject response = new JSONObject(bodyJSON.toString());
 
             Account account = new Account();
             account.setName(response.getString("name"));
@@ -138,5 +114,20 @@ public class MyHttpServer {
         } catch (RuntimeException e) {
             httpExchange.sendResponseHeaders(500, -1);
         }
+    }
+
+    private StringBuilder generateBodyJSON(HttpExchange httpExchange) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8));
+
+        StringBuilder bodyJSON = new StringBuilder();
+        String line;
+
+        while ((line = bufferedReader.readLine()) != null) {
+            bodyJSON.append(line);
+        }
+
+        bufferedReader.close();
+
+        return bodyJSON;
     }
 }
