@@ -23,20 +23,29 @@ public class MyHttpServer {
 
         server = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress("localhost", 8080), 0);
 
-        HttpContext contextGet = server.createContext("/get");
-        HttpContext contextAdd = server.createContext("/post");
-        HttpContext contextDelete = server.createContext("/delete");
-        HttpContext contextUpdate = server.createContext("/put");
-
-        contextGet.setHandler(this::getAllDataFromAccounts);
-        contextAdd.setHandler(this::addNewAccount);
-        contextDelete.setHandler(this::deleteAccount);
-        contextUpdate.setHandler(this::updateAccountBalance);
-
+        HttpContext context = server.createContext("/account");
+        context.setHandler(this::handleRequest);
     }
 
     public void start() {
         server.start();
+    }
+
+    private void handleRequest(HttpExchange httpExchange) throws IOException {
+        switch (httpExchange.getRequestMethod()) {
+            case "GET":
+                getAllDataFromAccounts(httpExchange);
+                break;
+            case "POST":
+                addNewAccount(httpExchange);
+                break;
+            case "DELETE":
+                deleteAccount(httpExchange);
+                break;
+            case "PUT":
+                updateAccountBalance(httpExchange);
+                break;
+        }
     }
 
     private void getAllDataFromAccounts(HttpExchange httpExchange) throws IOException {
