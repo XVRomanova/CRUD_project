@@ -8,7 +8,6 @@ public class DataBase {
      private Connection conn;
 
      public DataBase() throws IOException {
-
          PropertyFileReader pr = new PropertyFileReader();
 
         String url = pr.getPropValue("url");

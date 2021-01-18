@@ -59,7 +59,7 @@ public class MyHttpServer {
 
     private void updateAccountBalance(HttpExchange httpExchange) throws IOException {
 
-        StringBuilder bodyJSON = generateBodyJSON(httpExchange);
+        StringBuilder bodyJSON = readBodyJSON(httpExchange);
 
         try {
             JSONObject response = new JSONObject(bodyJSON.toString());
@@ -79,7 +79,7 @@ public class MyHttpServer {
 
     private void deleteAccount(HttpExchange httpExchange) throws IOException {
 
-        StringBuilder bodyJSON = generateBodyJSON(httpExchange);
+        StringBuilder bodyJSON = readBodyJSON(httpExchange);
 
         try {
             JSONObject response = new JSONObject(bodyJSON.toString());
@@ -98,7 +98,7 @@ public class MyHttpServer {
 
     private void addNewAccount(HttpExchange httpExchange) throws IOException {
 
-        StringBuilder bodyJSON = generateBodyJSON(httpExchange);
+        StringBuilder bodyJSON = readBodyJSON(httpExchange);
 
         try {
             JSONObject response = new JSONObject(bodyJSON.toString());
@@ -116,7 +116,7 @@ public class MyHttpServer {
         }
     }
 
-    private StringBuilder generateBodyJSON(HttpExchange httpExchange) throws IOException {
+    private StringBuilder readBodyJSON(HttpExchange httpExchange) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8));
 
         StringBuilder bodyJSON = new StringBuilder();
